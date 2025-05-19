@@ -47,4 +47,5 @@ lint:
 	cargo clippy -- -D warnings
 
 run_sample:
-	cargo run -- /Users/lukasgarbacik/Desktop/rust_project/input_sample /Users/lukasgarbacik/Desktop/rust_project/output
+	rm -rf output
+	cargo run -- /Users/lukasgarbacik/Desktop/rust_project/input_sample /Users/lukasgarbacik/Desktop/rust_project/output "es"

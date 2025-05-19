@@ -5,11 +5,9 @@ use std::fs;
 use num_cpus;
 use clap::Parser;
 
-fn thread_function(thread_id: usize, files: &[PathBuf]) {
-    println!("Thread {} is running", thread_id);
-    //py03 and collection
-    println!("files len: {}", files.len());
-}
+mod thread_handler;
+use thread_handler::thread_function;
+
 
 fn unpack_input(input_dir: &PathBuf) -> Vec<PathBuf> {
     let mut unpacked_files = Vec::new();
@@ -72,6 +70,7 @@ struct Args {
 
     input_dir: PathBuf,
     output_dir: PathBuf,
+    translated_language: String,
 }
 
 
@@ -110,8 +109,12 @@ fn main() {
             //only give slice to each thread with given range based on cores
             let files_ref = Arc::clone(&distributed_files);
 
+            //Copies to avoid borrowing problems
+            let output_dir = args.output_dir.clone();
+            let language = args.translated_language.clone();
+
             thread::spawn(move || {
-                thread_function(i, &files_ref[i]); //add begin and end index
+                thread_function(i, &files_ref[i], &output_dir, &language);
             })
         })
         .collect();
