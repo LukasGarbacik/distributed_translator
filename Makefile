@@ -25,10 +25,8 @@ docker-build:
 
 # Run Docker container
 docker-run:
-	docker run --rm $(PROJECT_NAME)
+	docker run --rm $(PROJECT_NAME) $1 $2 $3
 
-# Build and run in Docker
-docker: docker-build docker-run
 
 # Run tests
 test:
@@ -42,10 +40,13 @@ fmt:
 fmt-fix:
 	cargo fmt
 
-# Run clippy for linting
-lint:
-	cargo clippy -- -D warnings
-
 run_sample:
 	rm -rf output
 	cargo run -- /Users/lukasgarbacik/Desktop/rust_project/input_sample /Users/lukasgarbacik/Desktop/rust_project/output "es"
+
+
+docker_sample: docker-build
+	docker run --rm -it \
+	  -v /Users/lukasgarbacik/Desktop/rust_project/input_sample:/input \
+	  -v /Users/lukasgarbacik/Desktop/rust_project/output:/output \
+	  $(PROJECT_NAME) /input /output es
