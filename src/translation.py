@@ -22,16 +22,24 @@ def translate_text(input_file, output_file, target_language):
         
         # Read input file
         with open(input_file, 'r', encoding='utf-8') as f:
-            text = f.read()
-        
-        # Tokenize and translate
-        inputs = tokenizer(text, return_tensors="pt", padding=True)
-        translated = model.generate(**inputs)
-        translated_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            lines = f.readlines()
+
+        translated_lines = []
+
+        for line in lines:
+            if line.strip() == '':
+                translated_lines.append(line)
+                continue
+
+            # Tokenize and translate each line that isn't empty
+            inputs = tokenizer(line.strip(), return_tensors="pt", padding=True)
+            translated = model.generate(**inputs)
+            translated_text = tokenizer.batch_decode(translated, skip_special_tokens=True)[0]
+            translated_lines.append(translated_text + '\n')
         
         # Write to output file
         with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(translated_text)
+            f.writelines(translated_lines)
             
         return True
     except Exception as e:

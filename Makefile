@@ -1,6 +1,5 @@
 .PHONY: build run clean docker-build docker-run
 
-# Project name (change if different from directory name)
 PROJECT_NAME := rust_project
 
 # Build the project
